@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class map extends StatefulWidget {
-  const map({super.key});
+class MapScreen extends StatefulWidget {
+  const MapScreen({super.key});
 
   @override
-  State<map> createState() => _mapState();
+  State<MapScreen> createState() => _MapScreenState();
 }
 
-class _mapState extends State<map> {
+class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return const Center(
@@ -15,3 +15,4 @@ class _mapState extends State<map> {
     );
   }
 }
+

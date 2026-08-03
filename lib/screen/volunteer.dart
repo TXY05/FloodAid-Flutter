@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class volunteer extends StatefulWidget {
-  const volunteer({super.key});
+class VolunteerScreen extends StatefulWidget {
+  const VolunteerScreen({super.key});
 
   @override
-  State<volunteer> createState() => _volunteerState();
+  State<VolunteerScreen> createState() => _VolunteerScreenState();
 }
 
-class _volunteerState extends State<volunteer> {
+class _VolunteerScreenState extends State<VolunteerScreen> {
   @override
   Widget build(BuildContext context) {
     return const Center(
@@ -15,3 +15,4 @@ class _volunteerState extends State<volunteer> {
     );
   }
 }
+

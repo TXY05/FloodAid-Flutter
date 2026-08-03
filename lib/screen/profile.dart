@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class profile extends StatefulWidget {
-  const profile({super.key});
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
 
   @override
-  State<profile> createState() => _profileState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _profileState extends State<profile> {
+class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return const Center(
@@ -15,3 +15,4 @@ class _profileState extends State<profile> {
     );
   }
 }
+

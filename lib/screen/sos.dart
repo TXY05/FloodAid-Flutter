@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class sos extends StatefulWidget {
-  const sos({super.key});
+class SosScreen extends StatefulWidget {
+  const SosScreen({super.key});
 
   @override
-  State<sos> createState() => _sosState();
+  State<SosScreen> createState() => _SosScreenState();
 }
 
-class _sosState extends State<sos> {
+class _SosScreenState extends State<SosScreen> {
   @override
   Widget build(BuildContext context) {
     return const Center(
@@ -15,3 +15,4 @@ class _sosState extends State<sos> {
     );
   }
 }
+

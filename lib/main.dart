@@ -1,31 +1,53 @@
+import 'package:floodaid_flutter/composable/bottom_nav_bar.dart';
 import 'package:floodaid_flutter/screen/dashboard.dart';
 import 'package:floodaid_flutter/screen/map.dart';
 import 'package:floodaid_flutter/screen/sos.dart';
 import 'package:floodaid_flutter/screen/status.dart';
 import 'package:floodaid_flutter/screen/volunteer.dart';
+import 'package:floodaid_flutter/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool isDarkMode = false;
+
+  void toggleTheme() {
+    setState(() {
+      isDarkMode = !isDarkMode;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Floodaid',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: const MyHomePage(title: 'Floodaid'),
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      home: MyHomePage(title: 'Floodaid', onToggleTheme: toggleTheme),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({
+    super.key,
+    required this.title,
+    required this.onToggleTheme,
+  });
 
   final String title;
+  final VoidCallback onToggleTheme;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -34,52 +56,39 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int currentPageIndex = 0;
 
+  void onClicked(int index) {
+    setState(() {
+      currentPageIndex = index;
+    });
+  }
+
   final List<Widget> pages = [
-    dashboard(),
-    sos(),
-    status(),
-    map(),
-    volunteer(),
+    Dashboard(),
+    SosScreen(),
+    StatusScreen(),
+    MapScreen(),
+    VolunteerScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title: Text(widget.title),
-      ),
-      body: pages[currentPageIndex],
-      bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
-        },
-        indicatorColor: Colors.amber,
-        selectedIndex: currentPageIndex,
-        destinations: const <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'MyHomePage',
-          ),
-          NavigationDestination(icon: Icon(Icons.sos_outlined), label: 'SOS'),
-          NavigationDestination(
-            icon: Icon(Icons.details_outlined),
-            label: 'Status',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.location_on_outlined),
-            label: 'Maps',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.health_and_safety_outlined),
-            label: 'Volunteer',
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.dark_mode),
+            onPressed: widget.onToggleTheme,
           ),
         ],
+      ),
+      body: pages[currentPageIndex],
+      bottomNavigationBar: BottomMenu(
+        currentPageIndex: currentPageIndex,
+        onClicked: onClicked,
       ),
     );
   }
 }
-
