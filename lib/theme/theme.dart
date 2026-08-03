@@ -4,15 +4,16 @@ import 'package:flutter/material.dart';
 final ThemeData lightTheme = ThemeData(
   colorScheme: const ColorScheme.light(
     primary: AppColors.purple40,
-    onPrimary: Colors.white,
+    onPrimary: Colors.black,
 
     secondary: AppColors.purpleGrey40,
-    onSecondary: Colors.white,
+    onSecondary: Colors.black,
 
     tertiary: AppColors.pink40,
 
     surface: AppColors.blue40,
-    onSurface: AppColors.darkBlue40,
+    onSurface: Colors.black,
+
   ),
   scaffoldBackgroundColor: AppColors.blueGrey40,
 );
@@ -23,12 +24,12 @@ final ThemeData darkTheme = ThemeData(
     onPrimary: Colors.black,
 
     secondary: AppColors.purpleGrey80,
-    onSecondary: Colors.black,
+    onSecondary: AppColors.grey80,
 
-    tertiary: AppColors.pink80,
+    tertiary: AppColors.darkBlue80,
 
     surface: AppColors.blue80,
-    onSurface: Colors.white,
+    onSurface: AppColors.grey80,
   ),
   scaffoldBackgroundColor: AppColors.blueGrey80,
 );

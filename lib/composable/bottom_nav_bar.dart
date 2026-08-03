@@ -13,26 +13,30 @@ class BottomMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NavigationBar(
-      indicatorColor: Colors.amber,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      indicatorColor: Theme.of(context).colorScheme.tertiary,
+
       selectedIndex: currentPageIndex,
       onDestinationSelected: onClicked,
-      destinations: const <Widget>[
+      destinations: <Widget>[
         NavigationDestination(
-          selectedIcon: Icon(Icons.home),
-          icon: Icon(Icons.home_outlined),
-          label: 'MyHomePage',
+          icon: Icon(Icons.home_outlined, color: Theme.of(context).colorScheme.onSurface),
+          label: 'Home',
         ),
-        NavigationDestination(icon: Icon(Icons.sos_outlined), label: 'SOS'),
         NavigationDestination(
-          icon: Icon(Icons.details_outlined),
+          icon: Icon(Icons.sos_outlined, color: Theme.of(context).colorScheme.onSurface),
+          label: 'SOS',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.details_outlined, color: Theme.of(context).colorScheme.onSurface),
           label: 'Status',
         ),
         NavigationDestination(
-          icon: Icon(Icons.location_on_outlined),
+          icon: Icon(Icons.location_on_outlined, color: Theme.of(context).colorScheme.onSurface),
           label: 'Maps',
         ),
         NavigationDestination(
-          icon: Icon(Icons.health_and_safety_outlined),
+          icon: Icon(Icons.health_and_safety_outlined, color: Theme.of(context).colorScheme.onSurface),
           label: 'Volunteer',
         ),
       ],
