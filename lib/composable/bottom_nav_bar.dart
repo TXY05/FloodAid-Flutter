@@ -15,7 +15,6 @@ class BottomMenu extends StatelessWidget {
     return NavigationBar(
       backgroundColor: Theme.of(context).colorScheme.surface,
       indicatorColor: Theme.of(context).colorScheme.tertiary,
-
       selectedIndex: currentPageIndex,
       onDestinationSelected: onClicked,
       destinations: <Widget>[
