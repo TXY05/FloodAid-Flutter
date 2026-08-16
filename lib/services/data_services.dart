@@ -1,15 +1,13 @@
 import 'dart:convert';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:floodaid_flutter/model/status.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../model/status.dart';
 
 class FloodDataService {
   static const String _storageKey = 'flood_status_data';
 
-  // Firebase Realtime Database → Local storage
   static Future<void> fetchAndSave() async {
 
     final database = FirebaseDatabase.instanceFor(

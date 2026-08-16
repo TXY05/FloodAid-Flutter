@@ -248,9 +248,9 @@ class _FloodStatusHeaderState extends State<FloodStatusHeader> {
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
                   FeatureCard(
-                    title: 'Shelter Map',
-                    icon: Icons.place,
-                    color: Color(0xFF42A5F5),
+                    title: 'SOS',
+                    icon: Icons.sos_outlined,
+                    color: Color(0xFF624CC7),
                     size: 60,
                     onClick: () {
                       widget.onNavigateToTab(1);
@@ -266,9 +266,9 @@ class _FloodStatusHeaderState extends State<FloodStatusHeader> {
                     },
                   ),
                   FeatureCard(
-                    title: 'SOS',
-                    icon: Icons.sos_outlined,
-                    color: Color(0xFF624CC7),
+                    title: 'Shelter Map',
+                    icon: Icons.place,
+                    color: Color(0xFF42A5F5),
                     size: 60,
                     onClick: () {
                       widget.onNavigateToTab(3);

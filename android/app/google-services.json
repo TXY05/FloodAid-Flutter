@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1043730837669",
+    "firebase_url": "https://floodaid-flutter-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "floodaid-flutter",
+    "storage_bucket": "floodaid-flutter.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1043730837669:android:dd9e05fae86ae7cab99d4c",
+        "android_client_info": {
+          "package_name": "com.example.floodaid_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBX4ah-JpI-afi1fJnXRp54YdmVa5_JglQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
