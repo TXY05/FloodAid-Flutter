@@ -56,14 +56,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int currentPageIndex = 0;
 
-  void onClicked(int index) {
+  void onNavigateToTab(int index) {
     setState(() {
       currentPageIndex = index;
     });
   }
 
-  final List<Widget> pages = [
-    Dashboard(),
+  late final List<Widget> pages = [
+    Dashboard(onNavigateToTab: onNavigateToTab),
     SosScreen(),
     StatusScreen(),
     MapScreen(),
@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: pages[currentPageIndex],
       bottomNavigationBar: BottomMenu(
         currentPageIndex: currentPageIndex,
-        onClicked: onClicked,
+        onClicked: onNavigateToTab,
       ),
     );
   }
