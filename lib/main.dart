@@ -1,13 +1,23 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:floodaid_flutter/composable/bottom_nav_bar.dart';
 import 'package:floodaid_flutter/screen/dashboard.dart';
 import 'package:floodaid_flutter/screen/map.dart';
 import 'package:floodaid_flutter/screen/sos.dart';
 import 'package:floodaid_flutter/screen/status.dart';
 import 'package:floodaid_flutter/screen/volunteer.dart';
+import 'package:floodaid_flutter/services/data_services.dart';
 import 'package:floodaid_flutter/theme/theme.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  await FloodDataService.fetchAndSave();
+
   runApp(const MyApp());
 }
 

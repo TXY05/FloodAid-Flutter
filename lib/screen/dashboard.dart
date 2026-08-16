@@ -1,4 +1,7 @@
+import 'package:floodaid_flutter/model/status.dart';
 import 'package:flutter/material.dart';
+
+import '../services/data_services.dart';
 
 class Dashboard extends StatefulWidget {
   final Function(int) onNavigateToTab;
@@ -10,7 +13,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  String currentStatus = 'Safe';
+  FloodStatus? currentFloodStatus;
   String selectedLocation = '';
   final List<String> locations = [
     'Johor',
@@ -24,11 +27,24 @@ class _DashboardState extends State<Dashboard> {
     'Perak',
     'Sabah',
     'Selangor',
-    'Terengganu',
     'Sarawak',
+    'Terengganu',
     'Kuala Lumpur',
     'Labuan',
   ];
+
+  Future<void> loadFloodStatus(String location) async {
+    final data = await FloodDataService.getStatus(location);
+
+    if(!mounted){
+      return;
+
+    }
+
+    setState(() {
+      currentFloodStatus = data;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +55,21 @@ class _DashboardState extends State<Dashboard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            FloodStatusHeader(
-              locations: locations,
-              selectedLocation: selectedLocation,
-              onNavigateToTab: widget.onNavigateToTab,
-            ),
+              FloodStatusHeader(
+                status: currentFloodStatus?.status ?? 'unknown',
+                locations: locations,
+                selectedLocation: selectedLocation,
+                onNavigateToTab: widget.onNavigateToTab,
+                onLocationChanged: (location){
+                  if(location != null){
+
+                    setState(() {
+                      selectedLocation = location;
+                    });
+                    loadFloodStatus(location);
+                  }
+                },
+              )
           ],
         ),
       ),
@@ -155,9 +181,15 @@ class _FloodStatusHeaderState extends State<FloodStatusHeader> {
               );
             }).toList(),
             onChanged: (location) {
+              if (location == null) {
+                return;
+              }
+
               setState(() {
-                selectedLocation = location!;
+                selectedLocation = location;
               });
+
+              widget.onLocationChanged?.call(location);
             },
           ),
         ),
