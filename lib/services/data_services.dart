@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:floodaid_flutter/model/status.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,25 +8,16 @@ class FloodDataService {
   static const String _storageKey = 'flood_status_data';
 
   static Future<void> fetchAndSave() async {
+    final firestore = FirebaseFirestore.instance;
 
-    final database = FirebaseDatabase.instanceFor(
-      app: Firebase.app(),
-      databaseURL:
-      'https://floodaid-flutter-default-rtdb.asia-southeast1.firebasedatabase.app',
-    );
-
-    final snapshot = await database
-        .ref('stateWaterLevels')
+    final snapshot = await firestore
+        .collection('stateWaterLevels')
         .get();
-
 
     final List<FloodStatus> floodData = [];
 
-    for (final child in snapshot.children) {
-
-      final data = Map<String, dynamic>.from(
-        child.value as Map,
-      );
+    for (final doc in snapshot.docs) {
+      final data = doc.data();
 
       final floodStatus = FloodStatus.fromMap(data);
 
@@ -44,7 +34,6 @@ class FloodDataService {
       _storageKey,
       jsonEncode(jsonData),
     );
-
   }
 
   // Get all data from local storage

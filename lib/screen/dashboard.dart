@@ -120,7 +120,7 @@ class _FloodStatusHeaderState extends State<FloodStatusHeader> {
       case 'normal':
         iconColor = Colors.green;
         textColor = Colors.green;
-        message = 'Normal';
+        message = 'Safe';
         icon = Icons.check_circle;
         break;
 
