@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:floodaid_flutter/screen/volunteer_application.dart';
+import 'package:floodaid_flutter/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-import '../services/auth_service.dart';
 
 class VolunteerScreen extends StatelessWidget {
   const VolunteerScreen({super.key});
@@ -11,18 +11,15 @@ class VolunteerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-        const Text('Volunteer'),
+        title: const Text('Volunteer'),
         actions: [
           IconButton(
-            icon:
-            const Icon(Icons.history),
+            icon: const Icon(Icons.history),
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) =>
-                  const ApplicationHistoryScreen(),
+                  builder: (_) => const ApplicationHistoryScreen(),
                 ),
               );
             },
@@ -32,25 +29,20 @@ class VolunteerScreen extends StatelessWidget {
       body: Column(
         children: [
           Padding(
-            padding:
-            const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(12),
             child: Row(
               children: [
                 Expanded(
-                  child:
-                  ElevatedButton(
+                  child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) =>
-                          const VolunteerRegisterScreen(),
+                          builder: (_) => const VolunteerRegisterScreen(),
                         ),
                       );
                     },
-                    child: const Text(
-                      'Register as Volunteer',
-                    ),
+                    child: const Text('Register as Volunteer'),
                   ),
                 ),
               ],
@@ -58,31 +50,20 @@ class VolunteerScreen extends StatelessWidget {
           ),
 
           Padding(
-            padding:
-            const EdgeInsets.symmetric(
-              horizontal: 12,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             child: SizedBox(
               width: double.infinity,
-              child:
-              OutlinedButton(
+              child: OutlinedButton(
                 onPressed: () async {
                   try {
-                    await AuthService
-                        .addDemoActivities();
+                    await AuthService.addDemoActivities();
 
                     if (!context.mounted) {
                       return;
                     }
 
-                    ScaffoldMessenger.of(
-                        context)
-                        .showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Demo activities added.',
-                        ),
-                      ),
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Demo activities added.')),
                     );
                   } catch (e) {
                     if (!context.mounted) {
@@ -90,19 +71,11 @@ class VolunteerScreen extends StatelessWidget {
                     }
 
                     ScaffoldMessenger.of(
-                        context)
-                        .showSnackBar(
-                      SnackBar(
-                        content:
-                        Text('$e'),
-                      ),
-                    );
+                      context,
+                    ).showSnackBar(SnackBar(content: Text('$e')));
                   }
                 },
-                child:
-                const Text(
-                  'Add Demo Activities',
-                ),
+                child: const Text('Add Demo Activities'),
               ),
             ),
           ),
@@ -110,86 +83,48 @@ class VolunteerScreen extends StatelessWidget {
           const SizedBox(height: 10),
 
           Expanded(
-            child: StreamBuilder<
-                QuerySnapshot<
-                    Map<String, dynamic>>>(
-              stream:
-              AuthService
-                  .getActivities(),
-              builder:
-                  (context, snapshot) {
-                if (snapshot
-                    .connectionState ==
-                    ConnectionState.waiting) {
-                  return const Center(
-                    child:
-                    CircularProgressIndicator(),
-                  );
+            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: AuthService.getActivities(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      'Error: ${snapshot.error}',
-                    ),
-                  );
+                  return Center(child: Text('Error: ${snapshot.error}'));
                 }
 
-                if (!snapshot.hasData ||
-                    snapshot
-                        .data!.docs.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      'No volunteer activities.',
-                    ),
-                  );
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(child: Text('No volunteer activities.'));
                 }
 
-                final documents =
-                    snapshot.data!.docs;
+                final documents = snapshot.data!.docs;
 
                 return ListView.builder(
-                  itemCount:
-                  documents.length,
-                  itemBuilder:
-                      (context, index) {
-                    final document =
-                    documents[index];
+                  itemCount: documents.length,
+                  itemBuilder: (context, index) {
+                    final document = documents[index];
 
-                    final activity =
-                    document.data();
+                    final activity = document.data();
 
                     return Card(
-                      margin:
-                      const EdgeInsets
-                          .all(10),
+                      margin: const EdgeInsets.all(10),
                       child: ListTile(
-                        title: Text(
-                          activity[
-                          'title'] ??
-                              '',
-                        ),
+                        title: Text(activity['title'] ?? ''),
                         subtitle: Text(
                           '${activity['location']}\n'
-                              '${formatDate(activity['date'])}\n'
-                              'Available slots: ${activity['availableSlots']}',
+                          '${formatDate(activity['date'])}\n'
+                          'Available slots: ${activity['availableSlots']}',
                         ),
-                        trailing:
-                        const Icon(
-                          Icons
-                              .arrow_forward_ios,
-                        ),
+                        trailing: const Icon(Icons.arrow_forward_ios),
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) =>
-                                  ActivityDetailScreen(
-                                    activityId:
-                                    document.id,
-                                    activity:
-                                    activity,
-                                  ),
+                              builder: (_) => ActivityDetailScreen(
+                                activityId: document.id,
+                                activity: activity,
+                              ),
                             ),
                           );
                         },
@@ -205,61 +140,42 @@ class VolunteerScreen extends StatelessWidget {
     );
   }
 
-  static String formatDate(
-      dynamic value) {
+  static String formatDate(dynamic value) {
     if (value is Timestamp) {
-      return DateFormat(
-        'dd/MM/yyyy',
-      ).format(
-        value.toDate(),
-      );
+      return DateFormat('dd/MM/yyyy').format(value.toDate());
     }
 
     return '';
   }
 }
 
-class VolunteerRegisterScreen
-    extends StatefulWidget {
-  const VolunteerRegisterScreen({
-    super.key,
-  });
+class VolunteerRegisterScreen extends StatefulWidget {
+  const VolunteerRegisterScreen({super.key});
 
   @override
-  State<VolunteerRegisterScreen>
-  createState() =>
+  State<VolunteerRegisterScreen> createState() =>
       _VolunteerRegisterScreenState();
 }
 
-class _VolunteerRegisterScreenState
-    extends State<VolunteerRegisterScreen> {
-  final formKey =
-  GlobalKey<FormState>();
+class _VolunteerRegisterScreenState extends State<VolunteerRegisterScreen> {
+  final formKey = GlobalKey<FormState>();
 
-  final fullNameController =
-  TextEditingController();
+  final fullNameController = TextEditingController();
 
-  final myKadController =
-  TextEditingController();
+  final myKadController = TextEditingController();
 
-  final phoneController =
-  TextEditingController();
+  final phoneController = TextEditingController();
 
-  final addressController =
-  TextEditingController();
+  final addressController = TextEditingController();
 
-  final emergencyNameController =
-  TextEditingController();
+  final emergencyNameController = TextEditingController();
 
-  final emergencyPhoneController =
-  TextEditingController();
+  final emergencyPhoneController = TextEditingController();
 
   bool loading = false;
 
-  String? requiredField(
-      String? value) {
-    if (value == null ||
-        value.trim().isEmpty) {
+  String? requiredField(String? value) {
+    if (value == null || value.trim().isEmpty) {
       return 'Required.';
     }
 
@@ -267,8 +183,7 @@ class _VolunteerRegisterScreenState
   }
 
   Future<void> register() async {
-    if (!formKey.currentState!
-        .validate()) {
+    if (!formKey.currentState!.validate()) {
       return;
     }
 
@@ -277,22 +192,13 @@ class _VolunteerRegisterScreenState
     });
 
     try {
-      await AuthService
-          .registerVolunteer(
-        fullName:
-        fullNameController.text,
-        myKadPassport:
-        myKadController.text,
-        phone:
-        phoneController.text,
-        address:
-        addressController.text,
-        emergencyName:
-        emergencyNameController
-            .text,
-        emergencyPhone:
-        emergencyPhoneController
-            .text,
+      await AuthService.registerVolunteer(
+        fullName: fullNameController.text,
+        myKadPassport: myKadController.text,
+        phone: phoneController.text,
+        address: addressController.text,
+        emergencyName: emergencyNameController.text,
+        emergencyPhone: emergencyPhoneController.text,
       );
 
       if (!mounted) {
@@ -309,144 +215,98 @@ class _VolunteerRegisterScreenState
         loading = false;
       });
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(
-        SnackBar(
-          content: Text('$e'),
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Volunteer Register',
-        ),
-      ),
+      appBar: AppBar(title: const Text('Volunteer Register')),
       body: Form(
         key: formKey,
         child: ListView(
-          padding:
-          const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           children: [
             TextFormField(
-              controller:
-              fullNameController,
-              decoration:
-              const InputDecoration(
+              controller: fullNameController,
+              decoration: const InputDecoration(
                 labelText: 'Full Name',
-                border:
-                OutlineInputBorder(),
+                border: OutlineInputBorder(),
               ),
-              validator:
-              requiredField,
+              validator: requiredField,
             ),
 
             const SizedBox(height: 15),
 
             TextFormField(
-              controller:
-              myKadController,
-              decoration:
-              const InputDecoration(
-                labelText:
-                'MyKad / Passport Number',
-                border:
-                OutlineInputBorder(),
+              controller: myKadController,
+              decoration: const InputDecoration(
+                labelText: 'MyKad / Passport Number',
+                border: OutlineInputBorder(),
               ),
-              validator:
-              requiredField,
+              validator: requiredField,
             ),
 
             const SizedBox(height: 15),
 
             TextFormField(
-              controller:
-              phoneController,
-              decoration:
-              const InputDecoration(
-                labelText:
-                'Phone Number',
-                border:
-                OutlineInputBorder(),
+              controller: phoneController,
+              decoration: const InputDecoration(
+                labelText: 'Phone Number',
+                border: OutlineInputBorder(),
               ),
-              validator:
-              requiredField,
+              validator: requiredField,
             ),
 
             const SizedBox(height: 15),
 
             TextFormField(
-              controller:
-              addressController,
+              controller: addressController,
               maxLines: 3,
-              decoration:
-              const InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Address',
-                border:
-                OutlineInputBorder(),
+                border: OutlineInputBorder(),
               ),
-              validator:
-              requiredField,
+              validator: requiredField,
             ),
 
             const SizedBox(height: 20),
 
             const Text(
               'Emergency Contact',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight:
-                FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 15),
 
             TextFormField(
-              controller:
-              emergencyNameController,
-              decoration:
-              const InputDecoration(
+              controller: emergencyNameController,
+              decoration: const InputDecoration(
                 labelText: 'Name',
-                border:
-                OutlineInputBorder(),
+                border: OutlineInputBorder(),
               ),
-              validator:
-              requiredField,
+              validator: requiredField,
             ),
 
             const SizedBox(height: 15),
 
             TextFormField(
-              controller:
-              emergencyPhoneController,
-              decoration:
-              const InputDecoration(
-                labelText:
-                'Phone Number',
-                border:
-                OutlineInputBorder(),
+              controller: emergencyPhoneController,
+              decoration: const InputDecoration(
+                labelText: 'Phone Number',
+                border: OutlineInputBorder(),
               ),
-              validator:
-              requiredField,
+              validator: requiredField,
             ),
 
             const SizedBox(height: 25),
 
             ElevatedButton(
-              onPressed:
-              loading
-                  ? null
-                  : register,
+              onPressed: loading ? null : register,
               child: loading
                   ? const CircularProgressIndicator()
-                  : const Text(
-                'Register',
-              ),
+                  : const Text('Register'),
             ),
           ],
         ),
@@ -455,11 +315,9 @@ class _VolunteerRegisterScreenState
   }
 }
 
-class ActivityDetailScreen
-    extends StatefulWidget {
+class ActivityDetailScreen extends StatefulWidget {
   final String activityId;
-  final Map<String, dynamic>
-  activity;
+  final Map<String, dynamic> activity;
 
   const ActivityDetailScreen({
     super.key,
@@ -468,13 +326,10 @@ class ActivityDetailScreen
   });
 
   @override
-  State<ActivityDetailScreen>
-  createState() =>
-      _ActivityDetailScreenState();
+  State<ActivityDetailScreen> createState() => _ActivityDetailScreenState();
 }
 
-class _ActivityDetailScreenState
-    extends State<ActivityDetailScreen> {
+class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
   bool loading = false;
 
   Future<void> apply() async {
@@ -482,11 +337,8 @@ class _ActivityDetailScreenState
       loading = true;
     });
 
-    String? error =
-    await AuthService
-        .applyActivity(
-      activityId:
-      widget.activityId,
+    String? error = await AuthService.applyActivity(
+      activityId: widget.activityId,
     );
 
     if (!mounted) {
@@ -497,152 +349,51 @@ class _ActivityDetailScreenState
       loading = false;
     });
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(
-      SnackBar(
-        content: Text(
-          error ??
-              'Application successful.',
-        ),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(error ?? 'Application successful.')));
   }
 
   @override
   Widget build(BuildContext context) {
-    final activity =
-        widget.activity;
+    final activity = widget.activity;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Activity Detail',
-        ),
-      ),
+      appBar: AppBar(title: const Text('Activity Detail')),
       body: ListView(
-        padding:
-        const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         children: [
           Text(
             activity['title'] ?? '',
-            style: const TextStyle(
-              fontSize: 26,
-              fontWeight:
-              FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 20),
 
-          Text(
-            'Location: ${activity['location']}',
-          ),
+          Text('Location: ${activity['location']}'),
 
           const SizedBox(height: 10),
 
-          Text(
-            'Time: ${activity['time']}',
-          ),
+          Text('Time: ${activity['time']}'),
 
           const SizedBox(height: 10),
 
-          Text(
-            'Available Slots: ${activity['availableSlots']}',
-          ),
+          Text('Available Slots: ${activity['availableSlots']}'),
 
           const SizedBox(height: 20),
 
-          Text(
-            activity['description'] ??
-                '',
-          ),
+          Text(activity['description'] ?? ''),
 
           const SizedBox(height: 30),
 
           ElevatedButton(
-            onPressed:
-            loading
-                ? null
-                : apply,
+            onPressed: loading ? null : apply,
             child: loading
                 ? const CircularProgressIndicator()
-                : const Text(
-              'Apply Activity',
-            ),
+                : const Text('Apply Activity'),
           ),
         ],
       ),
     );
   }
 }
-
-class ApplicationHistoryScreen
-    extends StatelessWidget {
-  const ApplicationHistoryScreen({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title:
-        const Text('Activity History'),
-      ),
-      body: StreamBuilder<
-          QuerySnapshot<
-              Map<String, dynamic>>>(
-        stream:
-        AuthService
-            .getApplicationHistory(),
-        builder:
-            (context, snapshot) {
-          if (snapshot
-              .connectionState ==
-              ConnectionState.waiting) {
-            return const Center(
-              child:
-              CircularProgressIndicator(),
-            );
-          }
-
-          if (!snapshot.hasData ||
-              snapshot
-                  .data!.docs.isEmpty) {
-            return const Center(
-              child: Text(
-                'No application history.',
-              ),
-            );
-          }
-
-          return ListView.builder(
-            itemCount:
-            snapshot.data!.docs.length,
-            itemBuilder:
-                (context, index) {
-              final data = snapshot
-                  .data!.docs[index]
-                  .data();
-
-              return Card(
-                child: ListTile(
-                  title: Text(
-                    data[
-                    'activityTitle'] ??
-                        '',
-                  ),
-                  subtitle: Text(
-                    '${data['activityLocation']}\n'
-                        'Status: ${data['status']}',
-                  ),
-                ),
-              );
-            },
-          );
-        },
-      ),
-    );
-  }
-}
-

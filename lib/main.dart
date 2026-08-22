@@ -17,13 +17,10 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(const MyApp());
 }
-
 
 // ============================================================
 // MAIN APP
@@ -56,17 +53,13 @@ class _MyAppState extends State<MyApp> {
 
       darkTheme: darkTheme,
 
-      themeMode:
-      isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
 
       // Check login before entering the application
-      home: AuthGate(
-        onToggleTheme: toggleTheme,
-      ),
+      home: AuthGate(onToggleTheme: toggleTheme),
     );
   }
 }
-
 
 // ============================================================
 // AUTHENTICATION GATE
@@ -75,10 +68,7 @@ class _MyAppState extends State<MyApp> {
 class AuthGate extends StatelessWidget {
   final VoidCallback onToggleTheme;
 
-  const AuthGate({
-    super.key,
-    required this.onToggleTheme,
-  });
+  const AuthGate({super.key, required this.onToggleTheme});
 
   @override
   Widget build(BuildContext context) {
@@ -86,15 +76,10 @@ class AuthGate extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
 
       builder: (context, snapshot) {
-
         // Firebase is still checking login status
-        if (snapshot.connectionState ==
-            ConnectionState.waiting) {
-
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
+            body: Center(child: CircularProgressIndicator()),
           );
         }
 
@@ -104,15 +89,11 @@ class AuthGate extends StatelessWidget {
         }
 
         // User logged in
-        return MyHomePage(
-          title: 'Floodaid',
-          onToggleTheme: onToggleTheme,
-        );
+        return MyHomePage(title: 'Floodaid', onToggleTheme: onToggleTheme);
       },
     );
   }
 }
-
 
 // ============================================================
 // HOME PAGE
@@ -130,16 +111,11 @@ class MyHomePage extends StatefulWidget {
   final VoidCallback onToggleTheme;
 
   @override
-  State<MyHomePage> createState() =>
-      _MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
-
-class _MyHomePageState
-    extends State<MyHomePage> {
-
+class _MyHomePageState extends State<MyHomePage> {
   int currentPageIndex = 0;
-
 
   // ============================================================
   // LOAD FLOOD DATA AFTER LOGIN
@@ -152,24 +128,15 @@ class _MyHomePageState
     loadFloodData();
   }
 
-
   Future<void> loadFloodData() async {
     try {
-
       await FloodDataService.fetchAndSave();
 
-      debugPrint(
-        'Flood data loaded successfully.',
-      );
-
+      debugPrint('Flood data loaded successfully.');
     } catch (e) {
-
-      debugPrint(
-        'Flood data error: $e',
-      );
+      debugPrint('Flood data error: $e');
     }
   }
-
 
   // ============================================================
   // BOTTOM NAVIGATION
@@ -181,13 +148,9 @@ class _MyHomePageState
     });
   }
 
-
   // Keep your friend's existing navigation structure
   late final List<Widget> pages = [
-
-    Dashboard(
-      onNavigateToTab: onNavigateToTab,
-    ),
+    Dashboard(onNavigateToTab: onNavigateToTab),
 
     const SosScreen(),
 
@@ -198,75 +161,52 @@ class _MyHomePageState
     const VolunteerScreen(),
   ];
 
-
   // ============================================================
   // UI
   // ============================================================
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
 
-        backgroundColor:
-        Theme.of(context).colorScheme.primary,
-
-        foregroundColor:
-        Theme.of(context).colorScheme.onPrimary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
 
         title: Text(widget.title),
 
         actions: [
-
           // USER PROFILE
           IconButton(
-            icon: const Icon(
-              Icons.person,
-            ),
+            icon: const Icon(Icons.person),
 
             tooltip: 'User Profile',
 
             onPressed: () {
-
               Navigator.push(
                 context,
 
-                MaterialPageRoute(
-                  builder: (context) =>
-                  const ProfileScreen(),
-                ),
+                MaterialPageRoute(builder: (context) => const ProfileScreen()),
               );
             },
           ),
 
-
           // DARK MODE
           IconButton(
-            icon: const Icon(
-              Icons.dark_mode,
-            ),
+            icon: const Icon(Icons.dark_mode),
 
-            onPressed:
-            widget.onToggleTheme,
+            onPressed: widget.onToggleTheme,
           ),
         ],
       ),
 
-
-      body:
-      pages[currentPageIndex],
-
+      body: pages[currentPageIndex],
 
       // Keep your friend's BottomMenu
       bottomNavigationBar: BottomMenu(
+        currentPageIndex: currentPageIndex,
 
-        currentPageIndex:
-        currentPageIndex,
-
-        onClicked:
-        onNavigateToTab,
+        onClicked: onNavigateToTab,
       ),
     );
   }
