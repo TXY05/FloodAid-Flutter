@@ -1,6 +1,7 @@
 import 'package:floodaid_flutter/model/status.dart';
 import 'package:flutter/material.dart';
 
+import '../services/auth_service.dart';
 import '../services/data_services.dart';
 
 class Dashboard extends StatefulWidget {
